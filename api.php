@@ -21,6 +21,9 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
         case '/dining-tables':
             DiningTableController::search();
             break;
+        case '/user/assigned-dining-table':
+            UserController::retrieveAssignedDiningTable();
+            break;
     }
 } else if($_SERVER["REQUEST_METHOD"] == 'POST') {
     switch ($_GET['route']) {
