@@ -18,11 +18,15 @@ class DiningTableController extends Controller
         DiningTablePolicy::viewAny();
         $dining_tables = DiningTable::where(1);
         foreach ($dining_tables as $index => $dining_table) {
-            $assignments = Assignment::where('dining_table_id', $dining_table['id']);
-            if ($assignments) {
-                $dining_tables[$index]['designee'] = User::where('id', $assignments[0]['designee_id'])[0];
-                unset($dining_tables[$index]['designee']['account']);
-                unset($dining_tables[$index]['designee']['password']);
+            if ($_GET['load'] == 'designee') {
+                $assignments = Assignment::where('dining_table_id', $dining_table['id']);
+                if ($assignments) {
+                    $dining_tables[$index]['designee'] = User::where('id', $assignments[0]['designee_id'])[0];
+                    unset($dining_tables[$index]['designee']['account']);
+                    unset($dining_tables[$index]['designee']['password']);
+                }
+            } else if ($_GET['load'] == 'orders') {
+                $dining_tables[$index]['orders'] = Order::loadDish(Order::where('dining_table_id', $dining_table['id']));
             }
         }
         DiningTableController::response($dining_tables);
