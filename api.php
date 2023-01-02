@@ -50,6 +50,9 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
         case '/dining-table/assigned/waiter':
             DiningTableController::assignDesignee($request);
             break;
+        case '/dining-table/status':
+            DiningTableController::update($request);
+            break;
         case '/order/status':
             OrderController::update($request);
             break;

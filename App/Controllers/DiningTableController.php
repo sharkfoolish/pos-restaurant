@@ -64,4 +64,12 @@ class DiningTableController extends Controller
             }
         }
     }
+
+    public static function update($request) {
+        DiningTablePolicy::update();
+        DiningTable::update(
+            ['status' => $request['status']],
+            ['id' => $request['dining_table_id']]
+        );
+    }
 }
