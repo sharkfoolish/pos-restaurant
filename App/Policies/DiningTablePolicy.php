@@ -13,7 +13,7 @@ class DiningTablePolicy
     }
 
     public static function viewAny() {
-        if ($_SESSION['position'] != 'reception') {
+        if ($_SESSION['position'] != 'reception' && $_SESSION['position'] != 'chef') {
             new HttpException('403', '您尚無權限閱覽此資料');
         }
     }
