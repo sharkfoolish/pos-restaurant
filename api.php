@@ -1,6 +1,7 @@
 <?php
 include 'autoload.php';
 
+use App\Controllers\AuthController;
 use App\Extensions\HttpException;
 
 session_start();
@@ -13,7 +14,9 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
     }
 } else if($_SERVER["REQUEST_METHOD"] == 'POST') {
     switch ($_GET['route']) {
-        
+        case '/logout':
+            AuthController::logout();
+            break;
     }
 } else if($_SERVER["REQUEST_METHOD"] == 'PATCH') {
     switch ($_GET['route']) {
