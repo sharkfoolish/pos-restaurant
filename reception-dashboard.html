@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"
+          integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK"
+          crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/vue@3"></script>
+  <title>餐廳系統</title>
+</head>
+<body>
+<div id="app">
+  <div class="row m-5">
+    <div v-for="(dining_table, index) in dining_tables" :key=index class="col-lg-4 mb-3">
+      <div class="card">
+        <div class="card-header"></div>
+        <div class="card-body">
+          <h4 class="card-title">第{{dining_table.number}}桌</h4>
+          <div v-if="dining_table.status === 'clean'">
+            <button type="button" class="btn btn-primary" v-on:click="chooseNumber(index)" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              選擇負責的服務生
+            </button>
+          </div>
+          <div v-else-if="dining_table.status === 'on-seat'">
+            <button type="button" class="btn btn-success btn-sm" disabled>
+              已由{{dining_table.designee.name}}負責
+            </button>
+          </div>
+          <div v-else>
+            <button type="button" class="btn btn-danger btn-sm" disabled>
+              桌面尚未整理
+            </button>
+          </div>
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">第{{dining_tables[choose].number}}桌</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <select v-model="assigned_waiter" class="form-select" id="select" aria-label="Default select example">
+                    <option v-for="(waiter) in waiters" :value="waiter.id">
+                      {{waiter.name}}
+                    </option>
+                  </select>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" v-on:click="assign">確定指派</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const { createApp } = Vue
+  createApp({
+    data: () => ({
+      user : {},
+      waiters: [],
+      dining_tables: [],
+      choose: 0,
+      assigned_waiter: 0
+    }),
+    async created() {
+      await this.getCurrentUser()
+      this.waiters = (await axios.get(`api.php?route=/users/is-waiter`)).data
+      this.assigned_waiter = this.waiters[0].id
+      this.dining_tables = (await axios.get(`api.php?route=/dining-tables`)).data
+    },
+    methods: {
+      async getCurrentUser() {
+          try {
+              this.user = (await axios.get(`api.php?route=/current-user`, { params: { position: 'reception'} })).data
+          } catch (error) {
+              location.replace('login.html')
+          }
+      },
+      async assign() {
+        try {
+            await axios.patch(`api.php?route=/dining-table/assigned/waiter`,
+                {
+                    id: this.dining_tables[this.choose].id,
+                    designee_id: this.assigned_waiter
+                }
+            )
+            location.reload()
+        } catch (error) {
+            alert(error.response.message)
+        }
+
+      },
+      chooseNumber(index) {
+          this.choose = index
+      }
+    }
+    }).mount('#app')
+</script>
+</body>
