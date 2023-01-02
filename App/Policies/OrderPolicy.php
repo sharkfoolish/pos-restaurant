@@ -11,4 +11,10 @@ class OrderPolicy
             new HttpException('403', '您尚無權限更改此資料');
         }
     }
+
+    public static function update() {
+        if ($_SESSION['position'] != 'chef' && $_SESSION['position'] != 'waiter') {
+            new HttpException('403', '您尚無權限更改此資料');
+        }
+    }
 }
