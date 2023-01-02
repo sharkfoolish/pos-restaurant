@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"
+          integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK"
+          crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/vue@3"></script>
+  <title>餐廳系統</title>
+</head>
+<body>
+<div id="app">
+  <div class="row m-5">
+    <div v-for="(dining_table, index) in dining_tables" :key=index class="col-lg-4 mb-3">
+      <div class="card">
+        <div class="card-header"></div>
+        <div class="card-body">
+          <h4 class="card-title">第{{dining_table.number}}桌</h4>
+          <button v-if="dining_table.orders.length === 0" type="button" class="btn btn-danger" v-on:click="addOrder(dining_table.id)">點餐</button>
+          <div v-else>
+            <button class="btn btn-primary m-1" v-on:click="chooseNumber(index)" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">訂單資訊</button>
+            <button type="button" class="btn btn-success">下一道</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasRightLabel">訂單資訊</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="mb-4">
+        <h5>前菜</h5>
+        <div class="my-1" v-for="(appetizer) in dining_tables[choose].orders.appetizer">
+          {{appetizer.name}}
+        </div>
+      </div>
+      <div class="mb-4">
+        <h5>湯品</h5>
+        <div class="my-1" v-for="(soup) in dining_tables[choose].orders.soup">
+          {{soup.name}}
+        </div>
+      </div>
+      <div class="mb-4">
+        <h5>主菜</h5>
+        <div class="my-1" v-for="(main_course) in dining_tables[choose]['orders'].main_course">
+          {{main_course.name}}
+        </div>
+      </div>
+      <div class="mb-4">
+        <h5>甜點</h5>
+        <div class="my-1" v-for="(dessert) in dining_tables[choose]['orders'].dessert">
+          {{dessert.name}}
+        </div>
+      </div>
+      <div class="mb-4">
+        <h5>飲品</h5>
+        <div class="my-1" v-for="(beverage) in dining_tables[choose]['orders'].beverage">
+          {{beverage.name}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    const { createApp } = Vue
+    createApp({
+        data: () => ({
+            user : {},
+            dining_tables: [
+                {
+                    orders: {}
+                }
+            ],
+            choose: 0
+        }),
+        async created() {
+            await this.getCurrentUser()
+            this.dining_tables = (await axios.get(`api.php?route=/user/assigned-dining-table`)).data
+        },
+        methods: {
+            async getCurrentUser() {
+                try {
+                    this.user = (await axios.get(`api.php?route=/current-user`, { params: { position: 'waiter'} })).data
+                } catch (error) {
+                    location.replace('login.html')
+                }
+            },
+            chooseNumber(index) {
+                this.choose = index
+            },
+            addOrder(dining_table_id) {
+                location.replace("add-order.html?dining_table_id="+dining_table_id)
+            }
+        }
+    }).mount('#app')
+</script>
+</body>

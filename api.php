@@ -2,6 +2,7 @@
 include 'autoload.php';
 
 use App\Controllers\AuthController;
+use App\Controllers\UserController;
 use App\Extensions\HttpException;
 
 session_start();
@@ -12,6 +13,9 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
     switch ($_GET['route']) {
         case '/login':
             AuthController::login($request);
+            break;
+        case '/user/assigned-dining-table':
+            UserController::retrieveAssignedDiningTable();
             break;
     }
 } else if($_SERVER["REQUEST_METHOD"] == 'POST') {
