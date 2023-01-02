@@ -4,6 +4,7 @@ include 'autoload.php';
 use App\Controllers\AuthController;
 use App\Controllers\DiningTableController;
 use App\Controllers\DishController;
+use App\Controllers\OrderController;
 use App\Controllers\UserController;
 use App\Extensions\HttpException;
 
@@ -48,6 +49,9 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
     switch ($_GET['route']) {
         case '/dining-table/assigned/waiter':
             DiningTableController::assignDesignee($request);
+            break;
+        case '/order/status':
+            OrderController::update($request);
             break;
     }
 } else {
