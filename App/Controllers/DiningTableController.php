@@ -4,9 +4,11 @@ namespace App\Controllers;
 
 use App\Models\Assignment;
 use App\Models\DiningTable;
+use App\Models\Order;
 use App\Models\User;
 use App\Policies\AssignmentPolicy;
 use App\Policies\DiningTablePolicy;
+use App\Policies\OrderPolicy;
 
 class DiningTableController extends Controller
 {
@@ -44,5 +46,39 @@ class DiningTableController extends Controller
     {
         DiningTablePolicy::view();
         DiningTableController::response(DiningTable::where('id', $_GET['dining_table_id'])[0]);
+    }
+
+    public static function addOrder($request) {
+        OrderPolicy::create();
+        foreach ($request['appetizer'] as $dish_id) {
+            Order::save([
+                'dining_table_id' => $_GET['dining_table_id'],
+                'dish_id' => $dish_id
+            ]);
+        }
+        foreach ($request['soup'] as $dish_id) {
+            Order::save([
+                'dining_table_id' => $_GET['dining_table_id'],
+                'dish_id' => $dish_id
+            ]);
+        }
+        foreach ($request['main_course'] as $dish_id) {
+            Order::save([
+                'dining_table_id' => $_GET['dining_table_id'],
+                'dish_id' => $dish_id
+            ]);
+        }
+        foreach ($request['dessert'] as $dish_id) {
+            Order::save([
+                'dining_table_id' => $_GET['dining_table_id'],
+                'dish_id' => $dish_id
+            ]);
+        }
+        foreach ($request['beverage'] as $dish_id) {
+            Order::save([
+                'dining_table_id' => $_GET['dining_table_id'],
+                'dish_id' => $dish_id
+            ]);
+        }
     }
 }
