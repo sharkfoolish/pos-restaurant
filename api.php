@@ -3,6 +3,7 @@ include 'autoload.php';
 
 use App\Controllers\AuthController;
 use App\Controllers\DiningTableController;
+use App\Controllers\DishController;
 use App\Controllers\UserController;
 use App\Extensions\HttpException;
 
@@ -26,6 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
             break;
         case '/dining-tables':
             DiningTableController::search();
+            break;
+        case '/dishes':
+            DishController::search($request);
             break;
     }
 } else if($_SERVER["REQUEST_METHOD"] == 'POST') {
