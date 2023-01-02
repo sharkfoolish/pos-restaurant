@@ -8,8 +8,7 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    public static function login($request)
-    {
+    public static function login($request) {
         AuthController::validateLoginRequest($request);
         $user = User::where('account', $request['account'])[0];
         if (isset($user['password']) && $user['password'] == $request['password']) {
@@ -29,5 +28,10 @@ class AuthController extends Controller
         ];
         Validation::validate($list, $request);
     }
-
+    
+    public static function logout() {
+        session_destroy();
+        header('Location: login.html');
+        exit();
+    }
 }

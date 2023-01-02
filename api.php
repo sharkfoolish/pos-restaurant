@@ -16,7 +16,9 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
     }
 } else if($_SERVER["REQUEST_METHOD"] == 'POST') {
     switch ($_GET['route']) {
-        
+        case '/logout':
+            AuthController::logout();
+            break;
     }
 } else if($_SERVER["REQUEST_METHOD"] == 'PATCH') {
     switch ($_GET['route']) {
