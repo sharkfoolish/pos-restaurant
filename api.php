@@ -40,6 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
         case '/logout':
             AuthController::logout();
             break;
+        case '/dining-table/order':
+            DiningTableController::addOrder($request);
+            break;
     }
 } else if($_SERVER["REQUEST_METHOD"] == 'PATCH') {
     switch ($_GET['route']) {
