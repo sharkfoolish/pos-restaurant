@@ -30,7 +30,9 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
     }
 } else if($_SERVER["REQUEST_METHOD"] == 'PATCH') {
     switch ($_GET['route']) {
-
+        case '/dining-table/assigned/waiter':
+            DiningTableController::assignDesignee($request);
+            break;
     }
 } else {
     new HttpException(405, "Method Not Allowed");
