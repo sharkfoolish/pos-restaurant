@@ -39,4 +39,10 @@ class DiningTableController extends Controller
             'designee_id' => $request['designee_id']
         ]);
     }
+
+    public static function retrieve()
+    {
+        DiningTablePolicy::view();
+        DiningTableController::response(DiningTable::where('id', $_GET['dining_table_id'])[0]);
+    }
 }
