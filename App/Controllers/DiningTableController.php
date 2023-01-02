@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\Assignment;
 use App\Models\DiningTable;
 use App\Models\User;
+use App\Policies\AssignmentPolicy;
 use App\Policies\DiningTablePolicy;
 
 class DiningTableController extends Controller
@@ -23,5 +24,19 @@ class DiningTableController extends Controller
             }
         }
         DiningTableController::response($dining_tables);
+    }
+
+    public static function assignDesignee($request)
+    {
+        DiningTablePolicy::update();
+        DiningTable::update(
+            ['status' => 'on-seat'],
+            ['id' => $request['id']]
+        );
+        AssignmentPolicy::create();
+        Assignment::save([
+            'dining_table_id' => $request['id'],
+            'designee_id' => $request['designee_id']
+        ]);
     }
 }
