@@ -13,9 +13,6 @@ $request = json_decode($_request_body, true);
 
 if ($_SERVER["REQUEST_METHOD"] == 'GET') {
     switch ($_GET['route']) {
-        case '/login':
-            AuthController::login($request);
-            break;
         case '/current-user':
             AuthController::getCurrentUser($request);
             break;
@@ -37,6 +34,9 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
     }
 } else if($_SERVER["REQUEST_METHOD"] == 'POST') {
     switch ($_GET['route']) {
+        case '/login':
+            AuthController::login($request);
+            break;
         case '/logout':
             AuthController::logout();
             break;
