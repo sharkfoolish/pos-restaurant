@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"
+          integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK"
+          crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/vue@3"></script>
+  <title>餐廳系統</title>
+</head>
+<body>
+<div id="app">
+  <div class="row m-5 mb-3">
+    <div class="col-2">
+      <h3>第{{dining_table.number}}桌</h3>
+    </div>
+    <div class="col-10 d-flex justify-content-end">
+      <button type="button" class="btn btn-primary m-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">訂單資訊</button>
+      <button type="button" class="btn btn-success m-1" v-on:click="submitOrder">送出</button>
+    </div>
+  </div>
+  <div class="row mx-5">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link link-dark active" id="appetizer-tab" data-bs-toggle="tab" data-bs-target="#appetizer" type="button" role="tab" aria-controls="appetizer" aria-selected="true">前菜</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link link-dark" id="soup-tab" data-bs-toggle="tab" data-bs-target="#soup" type="button" role="tab" aria-controls="soup" aria-selected="false">湯品</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link link-dark" id="contact-tab" data-bs-toggle="tab" data-bs-target="#main_course" type="button" role="tab" aria-controls="main_course" aria-selected="false">主菜</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link link-dark" id="dessert-tab" data-bs-toggle="tab" data-bs-target="#dessert" type="button" role="tab" aria-controls="dessert" aria-selected="false">甜點</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link link-dark" id="beverage-tab" data-bs-toggle="tab" data-bs-target="#beverage" type="button" role="tab" aria-controls="beverage" aria-selected="false">飲品</button>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body">
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="appetizer" role="tabpanel" aria-labelledby="appetizer-tab">
+              <button v-for="(appetizer, index) in dishes.appetizer" :key=index v-on:click="chooseDish(index, 'appetizer')" type="button" class="btn btn-outline-danger btn-lg m-1" data-bs-toggle="modal" data-bs-target="#confirmModal">
+                {{appetizer.name}}
+              </button>
+            </div>
+            <div class="tab-pane fade" id="soup" role="tabpanel" aria-labelledby="soup-tab">
+              <button v-for="(soup, index) in dishes.soup" :key=index v-on:click="chooseDish(index, 'soup')" type="button" class="btn btn-outline-danger btn-lg m-1" data-bs-toggle="modal" data-bs-target="#confirmModal">
+                {{soup.name}}
+              </button>
+            </div>
+            <div class="tab-pane fade" id="main_course" role="tabpanel" aria-labelledby="main_course-tab">
+              <button v-for="(main_course, index) in dishes.main_course" :key=index v-on:click="chooseDish(index, 'main_course')" type="button" class="btn btn-outline-danger btn-lg m-1" data-bs-toggle="modal" data-bs-target="#confirmModal">
+                {{main_course.name}}
+              </button>
+            </div>
+            <div class="tab-pane fade" id="dessert" role="tabpanel" aria-labelledby="dessert-tab">
+              <button v-for="(dessert, index) in dishes.dessert" :key=index v-on:click="chooseDish(index, 'dessert')" type="button" class="btn btn-outline-danger btn-lg m-1" data-bs-toggle="modal" data-bs-target="#confirmModal">
+                {{dessert.name}}
+              </button>
+            </div>
+            <div class="tab-pane fade" id="beverage" role="tabpanel" aria-labelledby="dessert-tab">
+              <button v-for="(beverage, index) in dishes.beverage" :key=index v-on:click="chooseDish(index, 'beverage')" type="button" class="btn btn-outline-danger btn-lg m-1" data-bs-toggle="modal" data-bs-target="#confirmModal">
+                {{beverage.name}}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">{{ dishes[chooseDishType][chooseDishIndex].name }}</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <select v-model="count" class="form-select" aria-label="Default select example">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" v-on:click="addDish(count)" data-bs-dismiss="modal">加入到訂單</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasRightLabel">訂單資訊</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="mb-4">
+        <h5>前菜</h5>
+        <div class="my-1" v-for="(index) in order.appetizer">
+          {{dishes['appetizer'][index].name}} ${{dishes[chooseDishType][index].price}}
+        </div>
+      </div>
+      <div class="mb-4">
+        <h5>湯品</h5>
+        <div class="my-1" v-for="(index) in order.soup">
+          {{dishes['soup'][index].name}} ${{dishes[chooseDishType][index].price}}
+        </div>
+      </div>
+      <div class="mb-4">
+        <h5>主菜</h5>
+        <div class="my-1" v-for="(index) in order.main_course">
+          {{dishes['main_course'][index].name}} ${{dishes[chooseDishType][index].price}}
+        </div>
+      </div>
+      <div class="mb-4">
+        <h5>甜點</h5>
+        <div class="my-1" v-for="(index) in order.dessert">
+          {{dishes['dessert'][index].name}} ${{dishes[chooseDishType][index].price}}
+        </div>
+      </div>
+      <div class="mb-4">
+        <h5>飲品</h5>
+        <div class="my-1" v-for="(index) in order.beverage">
+          {{dishes['beverage'][index].name}} ${{dishes[chooseDishType][index].price}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    const { createApp } = Vue
+    createApp({
+        data: () => ({
+            user : {},
+            dining_table: {},
+            dishes: {
+                appetizer: [
+                    { name : ''}
+                ]
+            },
+            chooseDishType: 'appetizer',
+            chooseDishIndex: 0,
+            count: 1,
+            order: {
+                'appetizer': [] ,
+                'soup': [],
+                'main_course': [],
+                'dessert': [],
+                'beverage': [],
+            },
+            form: {
+                'appetizer': [] ,
+                'soup': [],
+                'main_course': [],
+                'dessert': [],
+                'beverage': [],
+            }
+        }),
+        async created() {
+            await this.getCurrentUser()
+            this.dishes = (await axios.get(`api.php?route=/dishes`)).data
+            let url = new URL(location.href)
+            let dining_table_id = parseInt(url.searchParams.get('dining_table_id'))
+            this.dining_table = (await axios.get(`api.php?route=/dining_tables/dining_table`,  {params: { dining_table_id: dining_table_id} })).data
+        },
+        methods: {
+            async getCurrentUser() {
+                try {
+                    this.user = (await axios.get(`api.php?route=/current-user`, { params: { position: 'waiter'} } )).data
+                } catch (error) {
+                    location.replace('login.html')
+                }
+            },
+            async submitOrder() {
+                await axios.post(`api.php?route=/dining-table/order`, this.form, { params: {dining_table_id: this.dining_table.id} })
+                location.replace('waiter-dashboard.html')
+            },
+            chooseDish(index, type) {
+                this.chooseDishIndex = index
+                this.chooseDishType = type
+            },
+            addDish(count) {
+                for (let i=0 ; i<count ; i++) {
+                    this.form[this.chooseDishType].push(this.dishes[this.chooseDishType][this.chooseDishIndex].id)
+                    this.order[this.chooseDishType].push(this.chooseDishIndex)
+                }
+                this.count = 1;
+            }
+        }
+    }).mount('#app')
+</script>
+</body>
