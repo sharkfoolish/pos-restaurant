@@ -107,31 +107,31 @@
       <div class="mb-4">
         <h5>前菜</h5>
         <div class="my-1" v-for="(index) in order.appetizer">
-          {{dishes['appetizer'][index].name}} ${{dishes[chooseDishType][index].price}}
+          {{dishes['appetizer'][index].name}} ${{dishes['appetizer'][index].price}}
         </div>
       </div>
       <div class="mb-4">
         <h5>湯品</h5>
         <div class="my-1" v-for="(index) in order.soup">
-          {{dishes['soup'][index].name}} ${{dishes[chooseDishType][index].price}}
+          {{dishes['soup'][index].name}} ${{dishes['soup'][index].price}}
         </div>
       </div>
       <div class="mb-4">
         <h5>主菜</h5>
         <div class="my-1" v-for="(index) in order.main_course">
-          {{dishes['main_course'][index].name}} ${{dishes[chooseDishType][index].price}}
+          {{dishes['main_course'][index].name}} ${{dishes['main_course'][index].price}}
         </div>
       </div>
       <div class="mb-4">
         <h5>甜點</h5>
         <div class="my-1" v-for="(index) in order.dessert">
-          {{dishes['dessert'][index].name}} ${{dishes[chooseDishType][index].price}}
+          {{dishes['dessert'][index].name}} ${{dishes['dessert'][index].price}}
         </div>
       </div>
       <div class="mb-4">
         <h5>飲品</h5>
         <div class="my-1" v-for="(index) in order.beverage">
-          {{dishes['beverage'][index].name}} ${{dishes[chooseDishType][index].price}}
+          {{dishes['beverage'][index].name}} ${{dishes['beverage'][index].price}}
         </div>
       </div>
     </div>

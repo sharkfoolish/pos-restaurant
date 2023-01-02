@@ -54,35 +54,14 @@ class DiningTableController extends Controller
 
     public static function addOrder($request) {
         OrderPolicy::create();
-        foreach ($request['appetizer'] as $dish_id) {
-            Order::save([
-                'dining_table_id' => $_GET['dining_table_id'],
-                'dish_id' => $dish_id
-            ]);
-        }
-        foreach ($request['soup'] as $dish_id) {
-            Order::save([
-                'dining_table_id' => $_GET['dining_table_id'],
-                'dish_id' => $dish_id
-            ]);
-        }
-        foreach ($request['main_course'] as $dish_id) {
-            Order::save([
-                'dining_table_id' => $_GET['dining_table_id'],
-                'dish_id' => $dish_id
-            ]);
-        }
-        foreach ($request['dessert'] as $dish_id) {
-            Order::save([
-                'dining_table_id' => $_GET['dining_table_id'],
-                'dish_id' => $dish_id
-            ]);
-        }
-        foreach ($request['beverage'] as $dish_id) {
-            Order::save([
-                'dining_table_id' => $_GET['dining_table_id'],
-                'dish_id' => $dish_id
-            ]);
+        $classes = ['appetizer', 'soup', 'main_course', 'dessert', 'beverage'];
+        foreach ($classes as $class) {
+            foreach ($request[$class] as $dish_id) {
+                Order::save([
+                    'dining_table_id' => $_GET['dining_table_id'],
+                    'dish_id' => $dish_id
+                ]);
+            }
         }
     }
 }
