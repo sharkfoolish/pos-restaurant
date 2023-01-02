@@ -15,14 +15,17 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
         case '/login':
             AuthController::login($request);
             break;
+        case '/current-user':
+            AuthController::getCurrentUser($request);
+            break;
         case '/users/is-waiter':
             UserController::searchIsWaiter();
             break;
-        case '/dining-tables':
-            DiningTableController::search();
-            break;
         case '/user/assigned-dining-table':
             UserController::retrieveAssignedDiningTable();
+            break;
+        case '/dining-tables':
+            DiningTableController::search();
             break;
     }
 } else if($_SERVER["REQUEST_METHOD"] == 'POST') {

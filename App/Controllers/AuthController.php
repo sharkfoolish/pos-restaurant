@@ -34,4 +34,16 @@ class AuthController extends Controller
         header('Location: login.html');
         exit();
     }
+
+    public static function getCurrentUser() {
+        if ($_SESSION) {
+            if (User::where('id', $_SESSION['id'], 'position', $_GET['position'])) {
+                UserController::response($_SESSION);
+            } else {
+                new HttpException(401, '您尚未登入成功');
+            }
+        } else {
+            new HttpException(401, '您尚未登入成功');
+        }
+    }
 }
