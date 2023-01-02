@@ -2,6 +2,7 @@
 include 'autoload.php';
 
 use App\Controllers\AuthController;
+use App\Controllers\DiningTableController;
 use App\Controllers\UserController;
 use App\Extensions\HttpException;
 
@@ -16,6 +17,9 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
             break;
         case '/users/is-waiter':
             UserController::searchIsWaiter();
+            break;
+        case '/dining-tables':
+            DiningTableController::search();
             break;
     }
 } else if($_SERVER["REQUEST_METHOD"] == 'POST') {
