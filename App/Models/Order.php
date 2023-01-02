@@ -10,6 +10,8 @@ class Order extends Model
     {
         foreach ($orders as $index => $order) {
             $dish = Dish::where('id', $order['dish_id'])[0];
+            $dish['status'] = $order['status'];
+            $dish['order_id'] = $order['id'];
             $orders[$dish['class']][] = $dish;
             unset($orders[$index]);
         }

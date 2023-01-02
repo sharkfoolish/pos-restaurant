@@ -73,7 +73,7 @@
       await this.getCurrentUser()
       this.waiters = (await axios.get(`api.php?route=/users/is-waiter`)).data
       this.assigned_waiter = this.waiters[0].id
-      this.dining_tables = (await axios.get(`api.php?route=/dining-tables`)).data
+      this.dining_tables = (await axios.get(`api.php?route=/dining-tables`, { params: { load: 'designee'} })).data
     },
     methods: {
       async getCurrentUser() {
