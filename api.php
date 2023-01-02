@@ -28,6 +28,9 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
         case '/dining-tables':
             DiningTableController::search();
             break;
+        case '/dining_tables/dining_table' :
+            DiningTableController::retrieve();
+            break;
         case '/dishes':
             DishController::search($request);
             break;
