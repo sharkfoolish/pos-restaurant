@@ -2,6 +2,7 @@
 include 'autoload.php';
 
 use App\Controllers\AuthController;
+use App\Controllers\DiningTableController;
 use App\Controllers\UserController;
 use App\Extensions\HttpException;
 
@@ -13,6 +14,12 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
     switch ($_GET['route']) {
         case '/login':
             AuthController::login($request);
+            break;
+        case '/users/is-waiter':
+            UserController::searchIsWaiter();
+            break;
+        case '/dining-tables':
+            DiningTableController::search();
             break;
         case '/user/assigned-dining-table':
             UserController::retrieveAssignedDiningTable();
@@ -26,7 +33,9 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
     }
 } else if($_SERVER["REQUEST_METHOD"] == 'PATCH') {
     switch ($_GET['route']) {
-
+        case '/dining-table/assigned/waiter':
+            DiningTableController::assignDesignee($request);
+            break;
     }
 } else {
     new HttpException(405, "Method Not Allowed");
